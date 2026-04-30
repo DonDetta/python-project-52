@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'users',
     'statuses',
+    'labels',
+    'tasks',
 ]
 
 LOGIN_URL = '/login/'

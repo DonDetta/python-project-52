@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
+from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -61,8 +62,15 @@ class UserDeleteView(UserPermissionMixin, DeleteView):
     success_url = reverse_lazy('users')
 
     def form_valid(self, form):
-        messages.success(self.request, 'Пользователь успешно удален')
-        return super().form_valid(form)
+        try:
+            self.object.delete()
+            messages.success(self.request, 'Пользователь успешно удален')
+        except ProtectedError:
+            messages.error(
+                self.request,
+                'Невозможно удалить пользователя, потому что он используется'
+            )
+        return redirect(self.success_url)
 
 
 class CustomLoginView(LoginView):
