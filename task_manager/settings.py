@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'statuses',
     'labels',
     'tasks',
+    'django_filters',
 ]
 
 LOGIN_URL = '/login/'
