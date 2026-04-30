@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<h1 class="mb-4">Вход</h1>
+<form method="post" style="max-width: 480px;">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-primary">Войти</button>
+    <a href="{% url 'users_create' %}" class="ms-3">Регистрация</a>
+</form>
+{% endblock %}
