@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import logout, update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.db.models import ProtectedError
@@ -24,9 +24,8 @@ class UserCreateView(CreateView):
     success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        response = super().form_valid(form)
         messages.success(self.request, 'Пользователь успешно зарегистрирован')
-        return response
+        return super().form_valid(form)
 
 
 class UserPermissionMixin:
@@ -51,8 +50,9 @@ class UserUpdateView(UserPermissionMixin, UpdateView):
     success_url = reverse_lazy('users')
 
     def form_valid(self, form):
-        response = super().form_valid(form)
         messages.success(self.request, 'Пользователь успешно изменен')
+        response = super().form_valid(form)
+        update_session_auth_hash(self.request, self.object)
         return response
 
 

@@ -7,8 +7,14 @@ migrate:
 collectstatic:
 	uv run python manage.py collectstatic --no-input
 
+setup:
+	make install && make migrate
+
 build:
 	./build.sh
+
+start:
+	uv run gunicorn task_manager.wsgi --bind 0.0.0.0:8000
 
 render-start:
 	uv run gunicorn task_manager.wsgi

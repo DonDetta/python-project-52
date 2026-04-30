@@ -18,5 +18,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "coverage>=7.0",
     "ruff>=0.15.12",
 ]
+
+[tool.coverage.run]
+omit = ["*/migrations/*", "manage.py"]

@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages_constants
 
 load_dotenv()
 
@@ -15,6 +16,11 @@ ALLOWED_HOSTS = ['webserver', 'localhost', '127.0.0.1']
 _extra_hosts = os.getenv('ALLOWED_HOSTS', '')
 if _extra_hosts:
     ALLOWED_HOSTS += _extra_hosts.split(',')
+
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
+_extra_origins = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+if _extra_origins:
+    CSRF_TRUSTED_ORIGINS += _extra_origins.split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -72,16 +78,18 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {'min_length': 1},
+    },
 ]
 
 LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+
+SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -96,6 +104,10 @@ STORAGES = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MESSAGE_TAGS = {
+    messages_constants.ERROR: 'danger',
+}
 
 ROLLBAR = {
     'access_token': os.getenv('ROLLBAR_ACCESS_TOKEN', ''),
